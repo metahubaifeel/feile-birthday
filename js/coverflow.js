@@ -245,13 +245,14 @@ class CoverFlowCarousel {
 
             this.translateX = startX + (targetX - startX) * eased;
 
-            // 检查循环
-            this.checkLoop();
-
             this.update();
 
             if (progress < 1) {
                 requestAnimationFrame(animate);
+            } else {
+                // 动画结束后再检查循环边界
+                this.checkLoop();
+                this.update();
             }
         };
 
@@ -286,14 +287,20 @@ class CoverFlowCarousel {
      */
     next() {
         this.currentIndex++;
-        const targetX = this.currentIndex * this.itemWidth;
+        let targetX = this.currentIndex * this.itemWidth;
 
-        // 检查是否需要循环
+        // 检查是否需要循环（在动画前静默调整）
         const oneSetWidth = this.images.length * this.itemWidth;
         if (this.currentIndex >= this.images.length * 2.5) {
-            // 跳到中间组对应位置
-            this.currentIndex -= this.images.length;
-            this.translateX = this.currentIndex * this.itemWidth;
+            // 先静默跳回中间组，用户无感知
+            const newIndex = this.currentIndex - this.images.length;
+            const newTranslateX = newIndex * this.itemWidth;
+            // 只有当距离目标很远时才静默跳转
+            if (Math.abs(this.translateX - newTranslateX) > oneSetWidth * 0.5) {
+                this.currentIndex = newIndex;
+                this.translateX = newTranslateX;
+                targetX = this.currentIndex * this.itemWidth;
+            }
         }
 
         this.animateTo(targetX, 600, t => {
@@ -308,12 +315,18 @@ class CoverFlowCarousel {
      */
     prev() {
         this.currentIndex--;
-        const targetX = this.currentIndex * this.itemWidth;
+        let targetX = this.currentIndex * this.itemWidth;
 
         const oneSetWidth = this.images.length * this.itemWidth;
         if (this.currentIndex < this.images.length * 0.5) {
-            this.currentIndex += this.images.length;
-            this.translateX = this.currentIndex * this.itemWidth;
+            // 先静默跳回中间组
+            const newIndex = this.currentIndex + this.images.length;
+            const newTranslateX = newIndex * this.itemWidth;
+            if (Math.abs(this.translateX - newTranslateX) > oneSetWidth * 0.5) {
+                this.currentIndex = newIndex;
+                this.translateX = newTranslateX;
+                targetX = this.currentIndex * this.itemWidth;
+            }
         }
 
         this.animateTo(targetX, 600, t => 1 - Math.pow(1 - t, 3));
