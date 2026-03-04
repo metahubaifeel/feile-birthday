@@ -109,7 +109,16 @@ class CoverFlowCarousel {
             const zIndex = Math.floor(100 - actualDistance);
 
             // 应用样式 - 水平居中计算
-            const xOffset = index * actualItemWidth - this.translateX + centerOffset - actualItemWidth / 2;
+            // 检测是否是移动端布局（left: 0）还是桌面端（left: 50%）
+            const isMobileLayout = parseInt(getComputedStyle(item).left) === 0;
+            let xOffset;
+            if (isMobileLayout) {
+                // 移动端：从左边开始计算，需要移到中心
+                xOffset = index * actualItemWidth - this.translateX + centerOffset - actualItemWidth / 2;
+            } else {
+                // 桌面端：元素已经通过left: 50%居中，只需要相对偏移
+                xOffset = index * actualItemWidth - this.translateX;
+            }
             item.style.transform = `
                 translateX(${xOffset}px)
                 scale(${Math.max(0.8, scale)})
