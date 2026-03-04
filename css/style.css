@@ -1,0 +1,738 @@
+/* ============================================
+   Feile 生日祝福网站 - 主样式
+   配色：西瓜奶皮子柔和版
+   ============================================ */
+
+:root {
+    /* 背景渐变 */
+    --color-bg-start: #fcea92;
+    --color-bg-end: #e1efbd;
+
+    /* 强调色 */
+    --color-accent: #f77f7f;
+    --color-accent-light: #ffa5a5;
+    --color-accent-dark: #e85a5a;
+
+    /* 辅助色 */
+    --color-secondary: #c8e28a;
+    --color-secondary-light: #d4e9a8;
+
+    /* 文字 */
+    --color-text: #5D4037;
+    --color-text-light: #8D6E63;
+    --color-text-white: #FFFBF7;
+
+    /* 功能色 */
+    --color-white: rgba(255, 255, 255, 0.9);
+    --color-shadow: rgba(247, 127, 127, 0.2);
+    --color-shadow-dark: rgba(93, 64, 55, 0.15);
+
+    /* 动画 */
+    --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 基础重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    color: var(--color-text);
+    background: linear-gradient(135deg, var(--color-bg-start) 0%, var(--color-bg-end) 100%);
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 页面基础样式 */
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.page.active {
+    display: flex;
+}
+
+/* ============================================
+   首页样式
+   ============================================ */
+
+.bg-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bg-stars::before,
+.bg-stars::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 20% 30%, var(--color-white) 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, var(--color-white) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 40% 80%, var(--color-white) 1px, transparent 1px),
+        radial-gradient(circle at 60% 20%, var(--color-white) 2px, transparent 2px);
+    opacity: 0.4;
+    animation: twinkle 4s ease-in-out infinite;
+}
+
+.bg-stars::after {
+    animation-delay: 2s;
+    transform: rotate(180deg);
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+.home-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+/* 标题 */
+.title {
+    text-align: center;
+    animation: titleBounce 1s var(--ease-elastic) both;
+}
+
+.title-text {
+    display: inline-block;
+    font-size: clamp(28px, 8vw, 42px);
+    font-weight: 700;
+    color: var(--color-text);
+    text-shadow: 2px 2px 0 var(--color-white),
+                 4px 4px 0 var(--color-shadow);
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes titleBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.8);
+    }
+    60% {
+        transform: translateY(10px) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Cover Flow 轮播容器 - 更大版本 */
+.coverflow-container {
+    width: 100%;
+    height: 420px;
+    position: relative;
+    overflow: hidden;
+    perspective: 1200px;
+    cursor: grab;
+}
+
+.coverflow-container:active {
+    cursor: grabbing;
+}
+
+.coverflow-track {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    will-change: transform;
+}
+
+.coverflow-item {
+    position: absolute;
+    width: 280px;
+    height: 380px;
+    left: 50%;
+    margin-left: -140px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--color-white);
+    box-shadow: 0 15px 50px var(--color-shadow-dark);
+    will-change: transform, filter, opacity;
+    transition: none;
+}
+
+.coverflow-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+}
+
+/* 祝福条 */
+.blessing-bar {
+    width: 100%;
+    max-width: 360px;
+    height: 40px;
+    background: var(--color-white);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px var(--color-shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+.blessing-bar::before,
+.blessing-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.blessing-bar::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--color-white), transparent);
+}
+
+.blessing-bar::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--color-white), transparent);
+}
+
+.blessing-track {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    white-space: nowrap;
+    animation: scrollText 12s linear infinite;
+}
+
+.blessing-item {
+    font-size: 14px;
+    color: var(--color-text-light);
+    padding: 0 8px;
+}
+
+.blessing-separator {
+    color: var(--color-accent);
+    padding: 0 8px;
+}
+
+@keyframes scrollText {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* 魔法按钮 */
+.magic-btn {
+    position: relative;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    border: none;
+    border-radius: 50px;
+    color: var(--color-text-white);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 20px var(--color-shadow);
+    transition: all 0.3s var(--ease-elastic);
+    animation: pulse 2s ease-in-out infinite;
+    overflow: hidden;
+}
+
+.magic-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px var(--color-shadow);
+}
+
+.magic-btn:active {
+    transform: scale(0.98);
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 6px 20px var(--color-shadow); }
+    50% { box-shadow: 0 6px 30px var(--color-shadow), 0 0 20px rgba(247, 127, 127, 0.4); }
+}
+
+/* ============================================
+   加载页样式
+   ============================================ */
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.cake-icon {
+    font-size: 80px;
+    animation: cakeWiggle 1.5s ease-in-out infinite;
+}
+
+@keyframes cakeWiggle {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+.loading-text {
+    font-size: 18px;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.progress-bar {
+    width: 200px;
+    height: 6px;
+    background: var(--color-white);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px var(--color-shadow-dark);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
+    border-radius: 3px;
+    transition: width 0.1s linear;
+}
+
+/* ============================================
+   互动页样式
+   ============================================ */
+
+.gesture-guide {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.guide-bubble {
+    background: var(--color-white);
+    padding: 12px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px var(--color-shadow);
+    text-align: center;
+    animation: fadeInDown 0.5s var(--ease-elastic);
+}
+
+.guide-bubble p {
+    font-size: 14px;
+    color: var(--color-text);
+    margin: 4px 0;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.camera-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 160px;
+    height: 120px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 3px solid var(--color-white);
+    box-shadow: 0 4px 15px var(--color-shadow-dark);
+    z-index: 10;
+}
+
+#camera-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* 镜像 */
+}
+
+#camera-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    /* 确保画布可见 */
+    background: transparent;
+}
+
+/* 调试模式：显示画布边界 */
+.debug-canvas #camera-canvas {
+    border: 2px solid red;
+}
+
+.camera-frame {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border: 3px dashed var(--color-accent);
+    border-radius: 50%;
+    animation: rotateFrame 8s linear infinite;
+}
+
+@keyframes rotateFrame {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 3D 体素蛋糕容器 */
+#cake-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+
+#cake-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.gesture-status {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-white);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--color-text-light);
+    box-shadow: 0 2px 10px var(--color-shadow);
+}
+
+.touch-mode-hint {
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(247, 127, 127, 0.9);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 14px;
+}
+
+/* ============================================
+   结尾页样式
+   ============================================ */
+
+.fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ending-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    animation: fadeInUp 1s var(--ease-smooth) both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.final-photo {
+    width: 200px;
+    height: 250px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px var(--color-shadow-dark);
+    border: 4px solid var(--color-white);
+}
+
+.final-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ending-title {
+    font-size: clamp(20px, 5vw, 28px);
+    color: var(--color-text);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.ending-title .name {
+    font-size: 1.3em;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.cake-emoji {
+    font-size: 60px;
+    animation: cakeBounce 1s var(--ease-elastic) infinite;
+}
+
+@keyframes cakeBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.from {
+    font-size: 14px;
+    color: var(--color-text-light);
+}
+
+.share-btn, .replay-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-elastic);
+}
+
+.share-btn {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 15px var(--color-shadow);
+}
+
+.replay-btn {
+    background: var(--color-white);
+    color: var(--color-text);
+    box-shadow: 0 2px 10px var(--color-shadow-dark);
+}
+
+.share-btn:hover, .replay-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   音乐控制按钮
+   ============================================ */
+
+.music-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: var(--color-white);
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px var(--color-shadow);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s var(--ease-elastic);
+}
+
+.music-toggle:hover {
+    transform: scale(1.1);
+}
+
+.music-toggle.playing .music-icon {
+    animation: musicPulse 1s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ============================================
+   微信提示
+   ============================================ */
+
+.wechat-tip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 60px 20px;
+}
+
+.tip-content {
+    background: var(--color-white);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.tip-content p {
+    color: var(--color-text);
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+/* ============================================
+   响应式适配
+   ============================================ */
+
+@media (max-height: 800px) {
+    .coverflow-container {
+        height: 360px;
+    }
+
+    .coverflow-item {
+        width: 240px;
+        height: 320px;
+        margin-left: -120px;
+    }
+
+    .home-content {
+        gap: 20px;
+    }
+}
+
+@media (max-height: 700px) {
+    .coverflow-container {
+        height: 300px;
+    }
+
+    .coverflow-item {
+        width: 200px;
+        height: 260px;
+        margin-left: -100px;
+    }
+
+    .home-content {
+        gap: 16px;
+    }
+}
+
+@media (max-height: 600px) {
+    .title-text {
+        font-size: 24px;
+    }
+
+    .coverflow-container {
+        height: 260px;
+    }
+
+    .coverflow-item {
+        width: 180px;
+        height: 230px;
+        margin-left: -90px;
+    }
+}
+
+/* ============================================
+   移动端适配 (小屏幕宽度)
+   ============================================ */
+
+@media (max-width: 480px) {
+    .page {
+        padding: 16px;
+    }
+
+    .home-content {
+        max-width: 100%;
+        gap: 20px;
+    }
+
+    .coverflow-container {
+        height: 320px;
+    }
+
+    .coverflow-item {
+        width: 220px;
+        height: 300px;
+        margin-left: -110px;
+    }
+}
+
+@media (max-width: 375px) {
+    .coverflow-container {
+        height: 280px;
+    }
+
+    .coverflow-item {
+        width: 200px;
+        height: 260px;
+        margin-left: -100px;
+    }
+
+    .title-text {
+        font-size: 26px;
+    }
+}
