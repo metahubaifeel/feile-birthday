@@ -13,7 +13,7 @@ class CoverFlowCarousel {
         this.isDragging = false;
         this.startX = 0;
         this.translateX = 0;
-        this.itemWidth = 300; // 增加宽度
+        this.itemWidth = 280; // 与CSS中的.coverflow-item宽度一致
         this.autoPlayInterval = 2500; // 2.5秒自动切换
         this.autoPlayTimer = null;
         this.isAutoPlaying = true;
@@ -34,8 +34,13 @@ class CoverFlowCarousel {
         });
 
         // 初始位置设置到中间那份的第一张
-        this.currentIndex = this.images.length;
-        this.translateX = this.currentIndex * this.itemWidth;
+        // 延迟获取实际宽度，确保CSS已应用
+        setTimeout(() => {
+            const actualWidth = this.getItemWidth();
+            this.currentIndex = this.images.length;
+            this.translateX = this.currentIndex * actualWidth;
+            this.update();
+        }, 100);
 
         // 绑定事件
         this.bindEvents();
@@ -50,20 +55,31 @@ class CoverFlowCarousel {
     }
 
     /**
+     * 获取当前实际的item宽度
+     */
+    getItemWidth() {
+        if (this.items.length > 0) {
+            return this.items[0].offsetWidth;
+        }
+        return this.itemWidth;
+    }
+
+    /**
      * 更新所有项目的位置和样式
      */
     update() {
         const containerWidth = this.container.offsetWidth;
         const centerOffset = containerWidth / 2;
+        const actualItemWidth = this.getItemWidth();
 
         this.items.forEach((item, index) => {
             // 计算与中心的距离
-            const itemCenter = index * this.itemWidth + this.itemWidth / 2;
+            const itemCenter = index * actualItemWidth + actualItemWidth / 2;
             const diff = itemCenter - (this.translateX + centerOffset);
             const distance = Math.abs(diff);
 
             // 计算实际显示距离（处理循环）
-            const totalWidth = this.items.length * this.itemWidth;
+            const totalWidth = this.items.length * actualItemWidth;
             const loopDistance = Math.min(distance, totalWidth - distance);
 
             // 如果距离太远（超过一屏），隐藏该项
@@ -92,9 +108,10 @@ class CoverFlowCarousel {
             // Z-index
             const zIndex = Math.floor(100 - actualDistance);
 
-            // 应用样式
+            // 应用样式 - 水平居中计算
+            const xOffset = index * actualItemWidth - this.translateX + centerOffset - actualItemWidth / 2;
             item.style.transform = `
-                translateX(${index * this.itemWidth - this.translateX}px)
+                translateX(${xOffset}px)
                 scale(${Math.max(0.8, scale)})
                 rotateY(${Math.abs(diff) < 10 ? 0 : rotateY}deg)
             `;
@@ -206,8 +223,9 @@ class CoverFlowCarousel {
      * 检查并处理循环边界
      */
     checkLoop() {
-        const totalWidth = this.items.length * this.itemWidth;
-        const oneSetWidth = this.images.length * this.itemWidth;
+        const actualItemWidth = this.getItemWidth();
+        const totalWidth = this.items.length * actualItemWidth;
+        const oneSetWidth = this.images.length * actualItemWidth;
 
         // 如果滑动到最左边（第一组），跳到中间组
         if (this.translateX < oneSetWidth * 0.5) {
@@ -224,9 +242,10 @@ class CoverFlowCarousel {
      * 吸附到最近的项
      */
     snapToNearest() {
-        const targetIndex = Math.round(this.translateX / this.itemWidth);
+        const actualItemWidth = this.getItemWidth();
+        const targetIndex = Math.round(this.translateX / actualItemWidth);
         this.currentIndex = targetIndex;
-        const targetX = this.currentIndex * this.itemWidth;
+        const targetX = this.currentIndex * actualItemWidth;
 
         this.animateTo(targetX, 400, t => 1 - Math.pow(1 - t, 3));
     }
@@ -285,15 +304,16 @@ class CoverFlowCarousel {
      * 下一张
      */
     next() {
+        const actualItemWidth = this.getItemWidth();
         this.currentIndex++;
-        const targetX = this.currentIndex * this.itemWidth;
+        const targetX = this.currentIndex * actualItemWidth;
 
         // 检查是否需要循环
-        const oneSetWidth = this.images.length * this.itemWidth;
+        const oneSetWidth = this.images.length * actualItemWidth;
         if (this.currentIndex >= this.images.length * 2.5) {
             // 跳到中间组对应位置
             this.currentIndex -= this.images.length;
-            this.translateX = this.currentIndex * this.itemWidth;
+            this.translateX = this.currentIndex * actualItemWidth;
         }
 
         this.animateTo(targetX, 600, t => {
@@ -307,13 +327,14 @@ class CoverFlowCarousel {
      * 上一张
      */
     prev() {
+        const actualItemWidth = this.getItemWidth();
         this.currentIndex--;
-        const targetX = this.currentIndex * this.itemWidth;
+        const targetX = this.currentIndex * actualItemWidth;
 
-        const oneSetWidth = this.images.length * this.itemWidth;
+        const oneSetWidth = this.images.length * actualItemWidth;
         if (this.currentIndex < this.images.length * 0.5) {
             this.currentIndex += this.images.length;
-            this.translateX = this.currentIndex * this.itemWidth;
+            this.translateX = this.currentIndex * actualItemWidth;
         }
 
         this.animateTo(targetX, 600, t => 1 - Math.pow(1 - t, 3));
