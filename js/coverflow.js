@@ -13,7 +13,7 @@ class CoverFlowCarousel {
         this.isDragging = false;
         this.startX = 0;
         this.translateX = 0;
-        this.itemWidth = 300; // 增加宽度
+        this.itemWidth = 280; // 与CSS一致
         this.autoPlayInterval = 2500; // 2.5秒自动切换
         this.autoPlayTimer = null;
         this.isAutoPlaying = true;
