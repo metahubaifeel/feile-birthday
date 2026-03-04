@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Flow 测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: sans-serif;
+            background: linear-gradient(135deg, #fcea92 0%, #e1efbd 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 20px; color: #5D4037; }
+        .info {
+            background: rgba(255,255,255,0.9);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+            max-width: 600px;
+        }
+        .test-section {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 40px;
+        }
+        .test-title {
+            font-size: 16px;
+            color: #5D4037;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>Cover Flow 轮播测试</h1>
+
+    <div class="info">
+        <p><strong>测试内容：</strong></p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>中间图片是否居中</li>
+            <li>自动播放时是否闪烁</li>
+            <li>循环切换是否平滑</li>
+            <li>移动端适配是否正常</li>
+        </ul>
+        <p style="margin-top: 10px;">打开控制台查看日志输出</p>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">桌面端测试 (调整浏览器宽度 > 480px)</div>
+        <section id="page-home" class="page active" style="position: relative; height: 500px;">
+            <div class="home-content">
+                <h1 class="title">
+                    <span class="title-text">祝菲乐生日快乐！</span>
+                </h1>
+                <div class="coverflow-container" id="coverflow-desktop">
+                    <div class="coverflow-track"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">移动端测试 (调整浏览器宽度 < 480px)</div>
+        <div style="max-width: 375px; margin: 0 auto; border: 2px dashed #ccc; padding: 10px;">
+            <section id="page-home-mobile" class="page active" style="position: relative; height: 450px;">
+                <div class="home-content">
+                    <h1 class="title">
+                        <span class="title-text">祝菲乐生日快乐！</span>
+                    </h1>
+                    <div class="coverflow-container" id="coverflow-mobile">
+                        <div class="coverflow-track"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/coverflow.js"></script>
+    <script>
+        // 测试图片
+        const testImages = [
+            'https://picsum.photos/300/400?random=1',
+            'https://picsum.photos/300/400?random=2',
+            'https://picsum.photos/300/400?random=3',
+            'https://picsum.photos/300/400?random=4'
+        ];
+
+        // 初始化桌面端
+        const desktopContainer = document.getElementById('coverflow-desktop');
+        if (desktopContainer) {
+            window.coverflowDesktop = new CoverFlowCarousel(desktopContainer, testImages);
+            console.log('✅ 桌面端 Cover Flow 初始化完成');
+        }
+
+        // 初始化移动端
+        const mobileContainer = document.getElementById('coverflow-mobile');
+        if (mobileContainer) {
+            window.coverflowMobile = new CoverFlowCarousel(mobileContainer, testImages);
+            console.log('✅ 移动端 Cover Flow 初始化完成');
+        }
+
+        // 输出调试信息
+        console.log('窗口宽度:', window.innerWidth);
+        console.log('窗口高度:', window.innerHeight);
+
+        // 监听resize
+        window.addEventListener('resize', () => {
+            console.log('窗口大小变化:', window.innerWidth, 'x', window.innerHeight);
+        });
+    </script>
+</body>
+</html>
