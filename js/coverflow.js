@@ -93,8 +93,8 @@ class CoverFlowCarousel {
             const maxDistance = 350;
             const actualDistance = Math.min(loopDistance, maxDistance);
 
-            // 缩放：中间1.3x（更大），越远越小
-            const scale = 1.3 - (actualDistance / maxDistance) * 0.5; // 1.3 -> 0.8
+            // 缩放：中间1.15x（轻微放大），越远越小
+            const scale = 1.15 - (actualDistance / maxDistance) * 0.35; // 1.15 -> 0.8
 
             // 模糊：中间清晰，越远越模糊
             const blur = (actualDistance / maxDistance) * 6;
