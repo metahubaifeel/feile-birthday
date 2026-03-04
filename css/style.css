@@ -184,8 +184,9 @@ html, body {
     position: absolute;
     width: 280px;
     height: 380px;
-    left: 50%;
-    margin-left: -140px;
+    left: 0;
+    top: 50%;
+    margin-top: -190px;
     border-radius: 20px;
     overflow: hidden;
     background: var(--color-white);
@@ -656,7 +657,8 @@ html, body {
     .coverflow-item {
         width: 240px;
         height: 320px;
-        margin-left: -120px;
+        left: 0;
+        margin-top: -160px;
     }
 
     .home-content {
@@ -672,7 +674,8 @@ html, body {
     .coverflow-item {
         width: 200px;
         height: 260px;
-        margin-left: -100px;
+        left: 0;
+        margin-top: -130px;
     }
 
     .home-content {
@@ -692,7 +695,8 @@ html, body {
     .coverflow-item {
         width: 180px;
         height: 230px;
-        margin-left: -90px;
+        left: 0;
+        margin-top: -115px;
     }
 }
 
@@ -717,7 +721,8 @@ html, body {
     .coverflow-item {
         width: 220px;
         height: 300px;
-        margin-left: -110px;
+        left: 0;
+        margin-top: -150px;
     }
 }
 
@@ -729,7 +734,8 @@ html, body {
     .coverflow-item {
         width: 200px;
         height: 260px;
-        margin-left: -100px;
+        left: 0;
+        margin-top: -130px;
     }
 
     .title-text {
